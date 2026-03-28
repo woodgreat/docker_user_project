@@ -1,0 +1,6 @@
+{
+  "image_name": "docker_user_image_name",
+  "container_name": "docker_user_container_name",
+  "workspace_dir": "../workspace",
+  "container_workspace": "/workspace"
+}
