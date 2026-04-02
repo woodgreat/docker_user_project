@@ -6,6 +6,7 @@
 ├── docker_work_dir/
 │   ├── config.json         # Config file (shared by all scripts)
 │   ├── Dockerfile          # Image build file
+│   ├── fix_sh.sh           # Fix shell scripts: line endings + permissions
 │   ├── install_docker.sh   # Build image (required first run)
 │   ├── start.sh            # Start container (start only, no build)
 │   ├── halt.sh             # Stop container (stop only, no delete)
@@ -42,6 +43,7 @@ All configurable items are here, scripts read automatically:
 
 | Script | Purpose | Description |
 |--------|---------|-------------|
+| `./fix_sh.sh` | Fix scripts | Fix line endings (Windows CRLF → Linux LF) + set execute permissions (+x) for all .sh scripts |
 | `./install_docker.sh` | Build image | **Required first**, auto-renames on success to prevent accidental runs |
 | `./start.sh` | Start container | Start only, no build (fails if image not found) |
 | `./halt.sh` | Stop container | Stop only, no delete, data preserved |
@@ -53,10 +55,13 @@ All configurable items are here, scripts read automatically:
 
 ### Normal Usage (Recommended)
 ```bash
-# 0. List all container status (optional)
+# 0. Fix shell scripts first (line endings + permissions)
+./fix_sh.sh
+
+# 1. List all container status (optional)
 ./list.sh
 
-# 1. Build image first (required, re-run if Dockerfile changes)
+# 2. Build image first (required, re-run if Dockerfile changes)
 #    Note: On success, script auto-renames to install_docker.sh__done to prevent accidents
 ./install_docker.sh
 

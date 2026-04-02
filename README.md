@@ -15,13 +15,14 @@ Easy Config • One-click Scripts • Data Persistence • Flexible Reuse
 ├── docker_work_dir/
 │   ├── config.json         # 配置文件（所有脚本共享）/ Config file (shared by all scripts)
 │   ├── Dockerfile          # 镜像构建文件 / Image build file
+│   ├── fix_sh.sh           # 修复脚本：换行符+权限 / Fix shell scripts: line endings + permissions
 │   ├── install_docker.sh   # 构建镜像（首次运行必需）/ Build image (required first run)
 │   ├── start.sh            # 启动容器（仅启动，不构建）/ Start container (start only, no build)
 │   ├── halt.sh             # 停止容器（仅停止，不删除）/ Stop container (stop only, no delete)
 │   ├── delete.sh           # 删除已停止容器（谨慎使用）/ Delete stopped container (use with caution)
 │   ├── exec.sh             # 进入容器 / Enter container
 │   ├── list.sh             # 列出所有 Docker 容器 / List all Docker containers
-│   └── docker_work_dir.md  # 本文档 / This documentation
+│   └── docker_work_dir.md  # 详细文档 / Detailed documentation
 └── workspace/              # 主机与容器共享目录（自动创建）/ Shared directory between host and container (auto-created)
 ```
 
@@ -56,6 +57,7 @@ All configurable items are here, scripts read automatically:
 
 | 脚本 / Script | 用途 / Purpose | 说明 / Description |
 |--------|---------|-------------|
+| `./fix_sh.sh` | 修复脚本 / Fix scripts | 修复换行符（Windows CRLF → Linux LF）+ 设置执行权限（+x）/ Fix line endings + set execute permissions |
 | `./install_docker.sh` | 构建镜像 / Build image | **首次必需**，成功后自动重命名防止意外运行 / **Required first**, auto-renames on success to prevent accidental runs |
 | `./start.sh` | 启动容器 / Start container | 仅启动，不构建（镜像不存在则失败）/ Start only, no build (fails if image not found) |
 | `./halt.sh` | 停止容器 / Stop container | 仅停止，不删除，数据保留 / Stop only, no delete, data preserved |
@@ -67,10 +69,13 @@ All configurable items are here, scripts read automatically:
 
 #### 正常使用（推荐）/ Normal Usage (Recommended)
 ```bash
-# 0. 列出所有容器状态（可选）/ List all container status (optional)
+# 0. 先修复脚本（换行符+权限）/ Fix shell scripts first (line endings + permissions)
+./fix_sh.sh
+
+# 1. 列出所有容器状态（可选）/ List all container status (optional)
 ./list.sh
 
-# 1. 首先构建镜像（必需，如果 Dockerfile 修改需要重新运行）
+# 2. 首先构建镜像（必需，如果 Dockerfile 修改需要重新运行）
 #    Build image first (required, re-run if Dockerfile changes)
 #    注意：成功后脚本自动重命名为 install_docker.sh__done 防止意外
 #    Note: On success, script auto-renames to install_docker.sh__done to prevent accidents
