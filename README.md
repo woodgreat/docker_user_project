@@ -71,6 +71,9 @@ All configurable items are here, scripts read automatically:
 ```bash
 # 0. 先修复脚本（换行符+权限）/ Fix shell scripts first (line endings + permissions)
 ./fix_sh.sh
+  #如果本文件出现换行符问题，需要先修复 / If line endings issue occurs, fix first:
+    sed -i 's/\r$//' *.sh
+    chmod +x *.sh
 
 # 1. 列出所有容器状态（可选）/ List all container status (optional)
 ./list.sh
